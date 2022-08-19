@@ -1,0 +1,15 @@
+{
+  "name": "node-markov",
+  "version": "1.0.0",
+  "description": "Practice with Markov chains in Node\"",
+  "main": "makeText.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "node-markov"
+  },
+  "author": "Gerard Keiser",
+  "license": "ISC"
+}
