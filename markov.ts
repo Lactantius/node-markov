@@ -39,6 +39,9 @@ function makeChains(words: string[]): Chain {
   return words.reduce(addToChain, <Chain>{});
 }
 
+/*
+ * TODO Figure out some way to not mutate the original chain
+ */
 function addToChain(
   chain: Chain,
   word: string,
@@ -60,6 +63,26 @@ function addToChain(
   }
 }
 
-console.log(makeChains(["the", "cat", "in", "the", "hat"]));
+function makeText(chain: Chain, numWords: number = 100): string {
+  const start = pickKey(chain);
+  return start;
+}
+
+/*
+ * Edited from https://stackoverflow.com/a/15106541/6632828
+ */
+function pickKey(obj: Object) {
+  const keys = Object.keys(obj);
+  return pickElement(keys);
+  // return keys[(keys.length * Math.random()) << 0];
+}
+
+function pickElement<T>(arr: Array<T>): T {
+  return arr[(arr.length * Math.random()) << 0];
+}
+
+const chain = makeChains(["the", "cat", "in", "the", "hat"]);
+console.log(chain);
+console.log(makeText(chain));
 
 export { MarkovMachine };
