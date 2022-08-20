@@ -36,12 +36,28 @@ interface Chain {
 }
 
 function makeChains(words: string[]): Chain {
-  return words.reduce((chain, word, i, words) => {
-    chain[word]
-      ? chain[word].push(words[i + 1])
-      : (chain[word] = [words[i + 1]]);
+  return words.reduce(addToChain, <Chain>{});
+}
+
+function addToChain(
+  chain: Chain,
+  word: string,
+  i: number,
+  words: string[]
+): Chain {
+  const nextWord = words[i + 1];
+  if (chain[word]) {
+    const wordArr =
+      chain[word].indexOf(nextWord) !== -1
+        ? chain[word]
+        : chain[word].concat(nextWord);
+    chain[word] = wordArr;
     return chain;
-  }, <Chain>{});
+  } else {
+    const wordArr = [nextWord];
+    chain[word] = wordArr;
+    return chain;
+  }
 }
 
 console.log(makeChains(["the", "cat", "in", "the", "hat"]));
