@@ -54,18 +54,29 @@ function addToChain(
       chain[word].indexOf(nextWord) !== -1
         ? chain[word]
         : chain[word].concat(nextWord);
-    chain[word] = wordArr;
+    chain[word] = wordArr.filter((word) => word); // Remove undefined
     return chain;
   } else {
     const wordArr = [nextWord];
-    chain[word] = wordArr;
+    chain[word] = wordArr.filter((word) => word);
     return chain;
   }
 }
 
 function makeText(chain: Chain, numWords: number = 100): string {
   const start = pickKey(chain);
-  return start;
+  return extendText(start, chain);
+}
+
+/*
+ * TODO punctuation
+ */
+function extendText(word: string, chain: Chain): string {
+  if (chain[word]) {
+    return `${word} ${extendText(pickElement(chain[word]), chain)}`;
+  } else {
+    return ""; // End when a word maps to an empty array.
+  }
 }
 
 /*
