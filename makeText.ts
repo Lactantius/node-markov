@@ -11,7 +11,7 @@ const promiseFile = promisify(readFile);
 function cat(path: string): Promise<Either<string, string>> {
   return promiseFile(path, "utf8")
     .then((data) => right(data))
-    .catch((err) => left("File could not be read"));
+    .catch((err: Error) => left(err.message));
 }
 
 function webCat(path: string): Promise<Either<string, string>> {
