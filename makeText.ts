@@ -22,8 +22,8 @@ function webCat(path: string): Promise<string | Error> {
 
 async function main(args: string[]) {
   if (args[2] === "--out") {
-    const data = await getData(args[4]);
-    writeFile(args[3], data, (err) =>
+    const text = await getData(args[2]);
+    writeFile(args[3], makeText(makeChains(splitInput(text))), (err) =>
       err ? console.log(err) : console.log("File saved successfully")
     );
   } else {

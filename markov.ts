@@ -10,7 +10,7 @@ interface Chain {
 }
 
 function makeChains(words: string[]): Chain {
-  return Array.from(words).reduce(addToChain, <Chain>{});
+  return Array.from(words).reduce(addToChain, <Chain>{}); // Array.from to prevent .reduce not function error
 }
 
 /*
