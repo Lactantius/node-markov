@@ -11,5 +11,8 @@
     "url": "node-markov"
   },
   "author": "Gerard Keiser",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^28.1.7"
+  }
 }

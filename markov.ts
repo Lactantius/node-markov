@@ -65,11 +65,11 @@ function addToChain(
 
 function makeText(chain: Chain, numWords: number = 100): string {
   const start = pickKey(chain);
-  return extendText(start, chain, numWords);
+  return extendText(start, chain, numWords).slice(0, -1); // Otherwise ends with a space char
 }
 
 /*
- * TODO account for punctuation, use lazy eval
+ * TODO account for punctuation, use lazy eval, prevent space at end
  */
 function extendText(word: string, chain: Chain, wordsLeft: number): string {
   if (chain[word] && wordsLeft > 0) {
@@ -96,12 +96,12 @@ function pickElement<T>(arr: Array<T>): T {
   return arr[(arr.length * Math.random()) << 0];
 }
 
-const chain = makeChains(["the", "cat", "in", "the", "hat"]);
-console.log(chain);
-console.log(makeText(chain));
+// const chain = makeChains(["the", "cat", "in", "the", "hat"]);
+// console.log(chain);
+// console.log(makeText(chain));
 
-const infChain = makeChains(["the", "cat", "the"]);
-console.log(infChain);
-console.log(makeText(infChain));
+// const infChain = makeChains(["the", "cat", "the"]);
+// console.log(infChain);
+// console.log(makeText(infChain));
 
-export { MarkovMachine };
+export { MarkovMachine, makeText, makeChains };
