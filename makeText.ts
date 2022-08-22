@@ -1,34 +1,37 @@
 /** Command-line tool to generate Markov text. */
 
-
 import { promisify } from "util";
 import { readFile, writeFile } from "fs";
-import { splitInput, makeText, makeChains } from "./markov"
+import { splitInput, makeText, makeChains } from "./markov";
+import { pipe } from "fp-ts/function";
+import { Either, right, left, chain } from "fp-ts/Either";
 
 const promiseFile = promisify(readFile);
 
-function cat(path: string) {
+function cat(path: string): Promise<Either<string, string>> {
   return promiseFile(path, "utf8")
-    .then((data) => data)
-    .catch((err) => err);
+    .then((data) => right(data))
+    .catch((err) => left("File could not be read"));
 }
 
-function webCat(path: string): Promise<string | Error> {
+function webCat(path: string): Promise<Either<string, string>> {
   return fetch(path)
     .then((res) => res.text())
-    .then((text) => text)
-    .catch((err) => err);
+    .then((text) => right(text))
+    .catch((err) => left("Website unavailable."));
 }
 
 async function main(args: string[]) {
+  const text = await getData(args[2]);
   if (args[2] === "--out") {
-    const text = await getData(args[2]);
-    writeFile(args[3], makeText(makeChains(splitInput(text))), (err) =>
-      err ? console.log(err) : console.log("File saved successfully")
-    );
+    return;
+    // writeFile(args[3], makeText(makeChains(splitInput(text))), (err) =>
+    //   err ? console.log(err) : console.log("File saved successfully")
+    // );
   } else {
-    const text = await getData(args[2]);
-    console.log(makeText(makeChains(splitInput(text))))
+    console.log(
+      pipe(text, chain(splitInput), chain(makeChains), chain(makeText))
+    );
   }
 }
 

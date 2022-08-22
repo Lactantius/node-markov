@@ -1,16 +1,23 @@
 /** Textual markov chain generator */
 
-function splitInput(text: string): string[] {
-  const words = text.split(/[ \r\n]+/);
-  return words.filter((c) => c !== "");
+import { Either, left, right } from "fp-ts/Either";
+
+function splitInput(text: string): Either<string, string[]> {
+  const words = text.split(/[ \r\n]+/).filter((c) => c !== "");
+  const either =
+    words.length > 0 ? right(words) : left("No valid words for a Markov chain");
+  return either;
 }
 
 interface Chain {
   [index: string]: string[];
 }
 
-function makeChains(words: string[]): Chain {
-  return Array.from(words).reduce(addToChain, <Chain>{}); // Array.from to prevent .reduce not function error
+function makeChains(words: string[]): Either<string, Chain> {
+  const chain = Array.from(words).reduce(addToChain, <Chain>{});
+  const either =
+    Object.keys(chain).length > 0 ? right(chain) : left("Chain is empty");
+  return either;
 }
 
 /*
@@ -37,9 +44,12 @@ function addToChain(
   }
 }
 
-function makeText(chain: Chain, numWords: number = 100): string {
+function makeText(
+  chain: Chain,
+  numWords: number = 100
+): Either<string, string> {
   const start = pickKey(chain);
-  return extendText(start, chain, numWords).slice(0, -1); // Otherwise ends with a space char
+  return right(extendText(start, chain, numWords).slice(0, -1)); // Otherwise ends with a space char
 }
 
 /*
