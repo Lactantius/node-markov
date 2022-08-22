@@ -40,7 +40,7 @@ function makeChains(words: string[]): Chain {
 }
 
 /*
- * TODO Figure out some way to not mutate the original chain
+ * TODO Figure out some way to not mutate the original chain, remove some logic to separate function
  */
 function addToChain(
   chain: Chain,
@@ -65,15 +65,19 @@ function addToChain(
 
 function makeText(chain: Chain, numWords: number = 100): string {
   const start = pickKey(chain);
-  return extendText(start, chain);
+  return extendText(start, chain, numWords);
 }
 
 /*
- * TODO punctuation
+ * TODO account for punctuation, use lazy eval
  */
-function extendText(word: string, chain: Chain): string {
-  if (chain[word]) {
-    return `${word} ${extendText(pickElement(chain[word]), chain)}`;
+function extendText(word: string, chain: Chain, wordsLeft: number): string {
+  if (chain[word] && wordsLeft > 0) {
+    return `${word} ${extendText(
+      pickElement(chain[word]),
+      chain,
+      wordsLeft - 1
+    )}`;
   } else {
     return ""; // End when a word maps to an empty array.
   }
@@ -95,5 +99,9 @@ function pickElement<T>(arr: Array<T>): T {
 const chain = makeChains(["the", "cat", "in", "the", "hat"]);
 console.log(chain);
 console.log(makeText(chain));
+
+const infChain = makeChains(["the", "cat", "the"]);
+console.log(infChain);
+console.log(makeText(infChain));
 
 export { MarkovMachine };
