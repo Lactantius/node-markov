@@ -21,21 +21,26 @@ function webCat(path: string): Promise<Either<string, string>> {
     .catch((err) => left("Website unavailable."));
 }
 
-async function main(args: string[]) {
+async function main(args: string[]): Promise<void> {
   const text = await getData(args[2]);
+  const pipeline = pipe(
+    text,
+    chain(splitInput),
+    chain(makeChains),
+    chain(makeText)
+  );
   if (args[2] === "--out") {
-    return;
-    // writeFile(args[3], makeText(makeChains(splitInput(text))), (err) =>
-    //   err ? console.log(err) : console.log("File saved successfully")
-    // );
+    pipeline._tag === "Left"
+      ? console.log(pipeline.left)
+      : writeFile(args[3], pipeline.right, (err) => console.log(err));
   } else {
-    console.log(
-      pipe(text, chain(splitInput), chain(makeChains), chain(makeText))
-    );
+    pipeline._tag === "Left"
+      ? console.log(pipeline.left)
+      : console.log(pipeline.right);
   }
 }
 
-async function getData(resource: string) {
+async function getData(resource: string): Promise<Either<string, string>> {
   if (resource.slice(0, 4) === "http") {
     return await webCat(resource);
   } else {
