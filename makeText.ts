@@ -18,7 +18,7 @@ function webCat(path: string): Promise<Either<string, string>> {
   return fetch(path)
     .then((res) => res.text())
     .then((text) => right(text))
-    .catch((err) => left("Website unavailable."));
+    .catch((err) => left(`Website unavailable: '${path}'`));
 }
 
 async function main(args: string[]): Promise<void> {
