@@ -31,12 +31,17 @@ class MarkovMachine {
   }
 }
 
+function splitInput(text: string): string[] {
+  const words = text.split(/[ \r\n]+/);
+  return words.filter((c) => c !== "");
+}
+
 interface Chain {
   [index: string]: string[];
 }
 
 function makeChains(words: string[]): Chain {
-  return words.reduce(addToChain, <Chain>{});
+  return Array.from(words).reduce(addToChain, <Chain>{});
 }
 
 /*
@@ -104,4 +109,4 @@ function pickElement<T>(arr: Array<T>): T {
 // console.log(infChain);
 // console.log(makeText(infChain));
 
-export { MarkovMachine, makeText, makeChains };
+export { MarkovMachine, splitInput, makeText, makeChains };
