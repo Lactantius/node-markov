@@ -4,8 +4,6 @@
 import { promisify } from "util";
 import { readFile, writeFile } from "fs";
 import { splitInput, makeText, makeChains } from "./markov"
-// const { promisify } = require("util");
-// const { readFile, writeFile } = require("fs");
 
 const promiseFile = promisify(readFile);
 
@@ -31,7 +29,6 @@ async function main(args: string[]) {
   } else {
     const text = await getData(args[2]);
     console.log(makeText(makeChains(splitInput(text))))
-    //console.log(await getData(args[2]));
   }
 }
 

@@ -1,36 +1,5 @@
 /** Textual markov chain generator */
 
-class MarkovMachine {
-  words: string[];
-
-  /** build markov machine; read in text.*/
-
-  constructor(text: string) {
-    let words = text.split(/[ \r\n]+/);
-    this.words = words.filter((c) => c !== "");
-    this.makeChains();
-  }
-
-  /** set markov chains:
-   *
-   *  for text of "the cat in the hat", chains will be
-   *  {"the": ["cat", "hat"], "cat": ["in"], "in": ["the"], "hat": [null]} */
-
-  makeChains() {
-    // this.words.reduce((chain, word, i) => {
-    //   return chain.word
-    //     ? chain[word].push(words[i + i])
-    //     : (chain[word] = [words[i + 1]]);
-    // }, {}: Chain);
-  }
-
-  /** return random text from chains */
-
-  makeText(numWords = 100) {
-    // TODO
-  }
-}
-
 function splitInput(text: string): string[] {
   const words = text.split(/[ \r\n]+/);
   return words.filter((c) => c !== "");
@@ -101,12 +70,4 @@ function pickElement<T>(arr: Array<T>): T {
   return arr[(arr.length * Math.random()) << 0];
 }
 
-// const chain = makeChains(["the", "cat", "in", "the", "hat"]);
-// console.log(chain);
-// console.log(makeText(chain));
-
-// const infChain = makeChains(["the", "cat", "the"]);
-// console.log(infChain);
-// console.log(makeText(infChain));
-
-export { MarkovMachine, splitInput, makeText, makeChains };
+export { splitInput, makeText, makeChains };
