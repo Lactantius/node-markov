@@ -2,11 +2,10 @@
 
 import { promisify } from "util";
 // import { readFile, writeFile } from "fs";
-import { readFile, writeFile } from "node:fs/promises"
+import { readFile, writeFile } from "node:fs/promises";
 import { splitInput, makeText, makeChains } from "./markov";
 import { pipe } from "fp-ts/function";
 import { Either, right, left, chain } from "fp-ts/Either";
-
 
 // const promiseFile = promisify(readFile);
 
@@ -24,22 +23,58 @@ function webCat(path: string): Promise<Either<string, string>> {
 }
 
 async function main(args: string[]): Promise<void> {
-  const text = await getData(args[2]);
+  if (args[2] === "--out") {
+    const outFile = args[3];
+    const resource = args[4];
+    writeData(resource, outFile);
+  } else {
+    const resource = args[2];
+    printData(resource);
+  }
+  // const text = await getData(args[2]);
+  // const pipeline = pipe(
+  //   text,
+  //   chain(splitInput),
+  //   chain(makeChains),
+  //   chain(makeText)
+  // );
+  // if (args[2] === "--out") {
+  //   pipeline._tag === "Left"
+  //     ? console.log(pipeline.left)
+  //     : writeFile(args[3], pipeline.right).catch((err: Error) =>
+  //       console.log(err)
+  //     );
+  // } else {
+  //   pipeline._tag === "Left"
+  //     ? console.log(pipeline.left)
+  //     : console.log(pipeline.right);
+  // }
+}
+
+async function printData(resource: string) {
   const pipeline = pipe(
-    text,
+    await getData(resource),
     chain(splitInput),
     chain(makeChains),
     chain(makeText)
   );
-  if (args[2] === "--out") {
-    pipeline._tag === "Left"
-      ? console.log(pipeline.left)
-      : writeFile(args[3], pipeline.right).catch((err: Error) => console.log(err))
-  } else {
-    pipeline._tag === "Left"
-      ? console.log(pipeline.left)
-      : console.log(pipeline.right);
-  }
+  pipeline._tag === "Left"
+    ? console.log(pipeline.left)
+    : console.log(pipeline.right);
+}
+
+async function writeData(resource: string, outFile: string) {
+  const pipeline = pipe(
+    await getData(resource),
+    chain(splitInput),
+    chain(makeChains),
+    chain(makeText)
+  );
+  pipeline._tag === "Left"
+    ? console.log(pipeline.left)
+    : writeFile(outFile, pipeline.right).catch((err: Error) =>
+      console.log(err)
+    );
 }
 
 async function getData(resource: string): Promise<Either<string, string>> {
