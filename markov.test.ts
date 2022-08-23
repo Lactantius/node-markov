@@ -3,7 +3,7 @@ const { makeText, makeChains } = require("./markov");
 describe("makeText", () => {
   test("makeText stops after given numbers of words", () => {
     const chain = makeChains(["the", "cat", "the"]).right;
-    expect(makeText(chain, 5).right.split(" ").length).toEqual(5); // The array has a trailing empty string;
+    expect(makeText(chain, 5).right.split(" ").length).toEqual(5);
   });
 });
 

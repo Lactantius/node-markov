@@ -73,7 +73,6 @@ function extendText(word: string, chain: Chain, wordsLeft: number): string {
 function pickKey(obj: Object) {
   const keys = Object.keys(obj);
   return pickElement(keys);
-  // return keys[(keys.length * Math.random()) << 0];
 }
 
 function pickElement<T>(arr: Array<T>): T {

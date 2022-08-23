@@ -1,13 +1,9 @@
 /** Command-line tool to generate Markov text. */
 
-import { promisify } from "util";
-// import { readFile, writeFile } from "fs";
 import { readFile, writeFile } from "node:fs/promises";
 import { splitInput, makeText, makeChains } from "./markov";
 import { pipe } from "fp-ts/function";
 import { Either, right, left, chain } from "fp-ts/Either";
-
-// const promiseFile = promisify(readFile);
 
 function cat(path: string): Promise<Either<string, string>> {
   return readFile(path, "utf8")
