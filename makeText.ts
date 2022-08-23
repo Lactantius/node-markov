@@ -1,15 +1,17 @@
 /** Command-line tool to generate Markov text. */
 
 import { promisify } from "util";
-import { readFile, writeFile } from "fs";
+// import { readFile, writeFile } from "fs";
+import { readFile, writeFile } from "node:fs/promises"
 import { splitInput, makeText, makeChains } from "./markov";
 import { pipe } from "fp-ts/function";
 import { Either, right, left, chain } from "fp-ts/Either";
 
-const promiseFile = promisify(readFile);
+
+// const promiseFile = promisify(readFile);
 
 function cat(path: string): Promise<Either<string, string>> {
-  return promiseFile(path, "utf8")
+  return readFile(path, "utf8")
     .then((data) => right(data))
     .catch((err: Error) => left(err.message));
 }
@@ -18,7 +20,7 @@ function webCat(path: string): Promise<Either<string, string>> {
   return fetch(path)
     .then((res) => res.text())
     .then((text) => right(text))
-    .catch((err) => left(`Website unavailable: '${path}'`));
+    .catch((err: Error) => left(`Website unavailable: '${path}'`));
 }
 
 async function main(args: string[]): Promise<void> {
@@ -32,7 +34,7 @@ async function main(args: string[]): Promise<void> {
   if (args[2] === "--out") {
     pipeline._tag === "Left"
       ? console.log(pipeline.left)
-      : writeFile(args[3], pipeline.right, (err) => console.log(err));
+      : writeFile(args[3], pipeline.right).catch((err: Error) => console.log(err))
   } else {
     pipeline._tag === "Left"
       ? console.log(pipeline.left)
