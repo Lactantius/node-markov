@@ -43,7 +43,7 @@ async function main(args: string[]): Promise<void> {
 }
 
 async function getData(resource: string): Promise<Either<string, string>> {
-  if (resource.slice(0, 4) === "http") {
+  if (resource.startsWith("http")) {
     return webCat(resource);
   } else {
     return cat(resource);
