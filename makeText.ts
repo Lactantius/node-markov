@@ -31,50 +31,33 @@ async function main(args: string[]): Promise<void> {
     const resource = args[2];
     printData(resource);
   }
-  // const text = await getData(args[2]);
-  // const pipeline = pipe(
-  //   text,
-  //   chain(splitInput),
-  //   chain(makeChains),
-  //   chain(makeText)
-  // );
-  // if (args[2] === "--out") {
-  //   pipeline._tag === "Left"
-  //     ? console.log(pipeline.left)
-  //     : writeFile(args[3], pipeline.right).catch((err: Error) =>
-  //       console.log(err)
-  //     );
-  // } else {
-  //   pipeline._tag === "Left"
-  //     ? console.log(pipeline.left)
-  //     : console.log(pipeline.right);
-  // }
 }
 
-async function printData(resource: string) {
-  const pipeline = pipe(
-    await getData(resource),
-    chain(splitInput),
-    chain(makeChains),
-    chain(makeText)
-  );
-  pipeline._tag === "Left"
-    ? console.log(pipeline.left)
-    : console.log(pipeline.right);
+async function printData(resource: string): Promise<void> {
+  const markovText = await markovTextFromResource(resource);
+  markovText._tag === "Left"
+    ? console.log(markovText.left)
+    : console.log(markovText.right);
 }
 
-async function writeData(resource: string, outFile: string) {
-  const pipeline = pipe(
-    await getData(resource),
-    chain(splitInput),
-    chain(makeChains),
-    chain(makeText)
-  );
-  pipeline._tag === "Left"
-    ? console.log(pipeline.left)
-    : writeFile(outFile, pipeline.right).catch((err: Error) =>
+async function writeData(resource: string, outFile: string): Promise<void> {
+  const markovText = await markovTextFromResource(resource);
+  markovText._tag === "Left"
+    ? console.log(markovText.left)
+    : writeFile(outFile, markovText.right).catch((err: Error) =>
       console.log(err)
     );
+}
+
+async function markovTextFromResource(
+  resource: string
+): Promise<Either<string, string>> {
+  return pipe(
+    await getData(resource),
+    chain(splitInput),
+    chain(makeChains),
+    chain(makeText)
+  );
 }
 
 async function getData(resource: string): Promise<Either<string, string>> {
